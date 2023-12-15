@@ -1,0 +1,4 @@
+[subj1] has a fierce rivalry with [subj2].	[mask] is the place that [l_act-single].	[mask] is the place that [l_act-single:neg].
+[subj1] has a fierce rivalry with [subj2].	[mask] is the place where people [p_act].	[mask] is the place where people [p_act:neg].
+
+A [subj1:dem] was taking classes with a [subj2:dem].	The [mask] [p_act-single].	The [mask] [p_act-single:neg].

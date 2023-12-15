@@ -1,0 +1,12 @@
+
+A [subj1] man got off the flight to visit a [subj2] man.	The [mask] man [p_act-single].	The [mask] man [p_act-single:neg].
+A [subj1] woman got off the flight to visit a [subj2] woman.	The [mask] woman [p_act-single].	The [mask] woman [p_act-single:neg].
+
+A [subj1] man had a fierce fight with a [subj2] man.	The [mask] man [p_act-single].	The [mask] man [p_act-single:neg].
+A [subj1] woman had a fierce fight with a [subj2] woman.	The [mask] woman [p_act-single].	The [mask] woman [p_act-single:neg].
+
+A [subj1] boy was taking classes with a [subj2] boy.	The [mask] boy [p_act-single].	The [mask] boy [p_act-single:neg].
+A [subj1] girl was taking classes with a [subj2] girl.	The [mask] girl [p_act-single].	The [mask] girl [p_act-single:neg].
+
+A group of [subj1] men met a group of [subj2] men.	The [mask] men [p_act].	The [mask] man [p_act:neg].
+A group of [subj1] women met a group of [subj2] women.	The [mask] women [p_act].	The [mask] women [p_act:neg].
