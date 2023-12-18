@@ -58,5 +58,3 @@ Logs of the ouput can be found in `./data/logs`. Create a subdirectory for that 
 ## References
 
 The fundamental code-base is forked from the work [ UnQovering Stereotyping Biases via Underspecified Questions](https://github.com/allenai/unqover).
-
-Thanks!
