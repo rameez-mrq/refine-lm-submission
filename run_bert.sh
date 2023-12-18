@@ -22,7 +22,7 @@ python3 -u -m lm.predict_bert --custom_model 1 --custom_model_path ${MODEL_PATH}
 
 echo ">> Aggregating model "${model}
 
-python3 analysis.py --cat ${model} --metrics subj_bias,pos_err,attr_err,model --input ${OUTPUT} --group_by "gender_act" | tee ${LOG}
+python3 analysis.py --metrics subj_bias,pos_err,attr_err,model --input ${OUTPUT} --group_by "gender_act" | tee ${LOG}
 
 echo ">> Done"
 # ##########################

@@ -58,9 +58,9 @@ def get_positional_inconsistency(opt, data):
 	print('{0} / {1} are positionally inconsistent in discrete predictions'.format(biased_cnt, len(rs)))
 	print('positional error: {:.4f}'.format(avg_bias))
 
-	with open('data/pkl/aap/aap_bias_scores_' +opt.cat+ '.pkl','wb') as fp:
-		pickle.dump(all_ans_p, fp)
-	print('saving the pkl as {opt.cat}')
+	# with open('data/pkl/aap/aap_bias_scores_' +opt.cat+ '.pkl','wb') as fp:
+	# 	pickle.dump(all_ans_p, fp)
+	# print('saving the pkl as {opt.cat}')
 	
 	print('avg ans probability: {:.4f}'.format(sum(all_ans_p) / len(all_ans_p)))
 
@@ -270,11 +270,11 @@ def get_model_bias(opt, data, lists):
 		eta += [np.mean([abs(cnt) for act, score, cnt, l in subj_row])]
 	mu_mean = np.mean(mu)
 	eta_mean = np.mean(eta)
-	with open('data/pkl/mu/mu_bias_scores_'+opt.cat+'.pkl','wb') as fp:
-		pickle.dump(mu, fp)
+	# with open('data/pkl/mu/mu_bias_scores_'+opt.cat+'.pkl','wb') as fp:
+	# 	pickle.dump(mu, fp)
 	
-	with open('data/pkl/eta/eta_bias_scores_'+opt.cat+ '.pkl','wb') as fp:
-		pickle.dump(eta, fp)
+	# with open('data/pkl/eta/eta_bias_scores_'+opt.cat+ '.pkl','wb') as fp:
+	# 	pickle.dump(eta, fp)
 
 
 	print('model mu', mu_mean)
@@ -439,7 +439,7 @@ def get_subj_bias(opt, data, lists):
 parser = argparse.ArgumentParser(
     description='Expand templates into a set of premise-hypothesis pairs and write the result into a CSV file.')
 	
-parser.add_argument("--cat", help='catergory of bias used', required = True, default='refine-bert')
+parser.add_argument("--cat", help='catergory of bias used', required = False, default='refine-bert')
 parser.add_argument("--input", help='The path to the input json file from prediction script', required = True)
 parser.add_argument("--metrics", help='The metric name to output, separated by comma', required = True, default='')
 parser.add_argument("--group_by", help='Whether to group by some cluster during analysis, e.g. gender_act/subj', required = False, default='')
