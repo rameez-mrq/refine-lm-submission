@@ -19,7 +19,7 @@ from redubias.calc_bias import Dataset, calculate_reward, calculate_batch_manhat
 # from redubias.predict_topk import predict_answers
 from redubias.predict_topk import predict_answers
 # from model import CustomBERTModel
-from model_BERT import CustomBERTModel
+from model_LLM import CustomLLMModel
 import _pickle as pickle
 from time import process_time
 import random
@@ -43,6 +43,8 @@ def main():
     parser.add_argument('--output', type=str, default="new_model", help="Name of the model")
     parser.add_argument('--ppdata', type=str, default="", help="Path of the preprocessed data")
     parser.add_argument('--use_he_she', help="Whether to account for lm predictions on he/she", type=int, default=0)
+    parser.add_argument('--llm_name', help="Name of the LLM model to use", type=str)
+
     args = parser.parse_args()
     torch.cuda.set_device(args.device)
     ppdata_path = args.ppdata
@@ -60,7 +62,6 @@ def main():
     keys = list(pp_data.keys())
     values = list(pp_data.values())
     values = [pp_data[k] for k in keys]
-
     batch_size = args.batch_size
     training_values = Dataset(values)
     training_generator = torch.utils.data.DataLoader(training_values, batch_size=batch_size, collate_fn=collate_fn,
@@ -70,22 +71,17 @@ def main():
     mini_batch_size = args.mini_batch_size
     batch_size = args.batch_size
     num_epochs = args.epochs
-    lr = args.lr
+    learning_rate = args.lr
     topk = args.topk
     name = args.output
     """Defining Model"""
     print("Defining Model", flush=True)
     # NOTE: Insert the name of the model here
-    transformer_type = "bert-base-uncased"
-    model = CustomBERTModel(topk, batch_size).to(device)
+    model = CustomLLMModel(args.llm_name, topk, batch_size)
 
-    for layer_name, param in model.named_parameters():
-        if 'bert' in layer_name:
-            param.requires_grad = False
-    print("Loading Dataset", flush=True)
-    training_values = Dataset(values)
+    for layer_name, param in model.llm.named_parameters():
+        param.requires_grad = False
 
-    learning_rate = lr
     print("Number of Samples: ", len(training_generator), flush=True)
     print(args)
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
@@ -98,18 +94,32 @@ def main():
     start = process_time()
     cp_path = 'data/logs/training_logs/' + name + '.pt'
     print('Name:', name)
+    finished = False
     for epoch in range(num_epochs):
+        if finished:
+            break
         # Training
         for local_batch in training_generator:
+            #if process_time() - start > 68400:
+            #    print("Arrêt après 19 heures d'exécution")
+            #    finished = True
+            #    break
+
+            if process_time() - start > 18000:
+                print("Arrêt après 5 heures d'exécution")
+                finished = True
+                break
+
             with torch.cuda.device(0):
                 # Transfer to GPU
                 loss, reward = calculate_reward(args, local_batch, mini_batch_size, topk, model.tokenizer, model)
-                if step % 100 == 0:
-                    print("Step ", step, "| Loss:  ", loss.item(), "| Reward: ", reward, flush=True)
+                if step % 25 == 0:
+                    model_path = 'saved_models/' + name + '_out_old.pt'
+                    torch.save(model.out.state_dict(), model_path)
+                print("Step ", step, "| Loss:  ", loss.item(), "| Reward: ", reward, flush=True)
 
-                if not torch.isnan(loss):
+                if reward is not None and not torch.isnan(loss):
                     loss.backward()
-
                 optimizer.step()
 
                 optimizer.zero_grad()
@@ -122,7 +132,7 @@ def main():
     print("time elapsed: ", stop - start)
     # Save model
     model_path = 'saved_models/' + name + '.pt'
-    torch.save(model, 'saved_models/' + name)
+    torch.save(model.out.state_dict(), model_path)
 
 
 if __name__ == '__main__':
